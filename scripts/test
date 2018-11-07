@@ -3,7 +3,7 @@
 RAND=$RANDOM
 
 function check {
-  RESULT=$(curl localhost:8080/check \
+  RESULT=$(curl authtables:8080/check \
    -s \
    -H "Content-Type: application/json" \
    -XPOST -d \
@@ -20,7 +20,7 @@ function check {
 }
 
 function add {
-  RESULT=$(curl localhost:8080/add \
+  RESULT=$(curl authtables:8080/add \
    -s \
    -H "Content-Type: application/json" \
    -XPOST -d \
@@ -36,7 +36,7 @@ function add {
 }
 
 #function rst {
-#  RESULT=$(curl localhost:8080/reset -s \
+#  RESULT=$(curl authtables:8080/reset -s \
 #  -H "Content-Type: application/json" \
 #  )
 #

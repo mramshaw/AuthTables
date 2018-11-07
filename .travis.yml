@@ -10,7 +10,7 @@ script:
   - docker-compose build
   - docker-compose run authtables go test -race -coverprofile=coverage.txt -covermode=atomic -v
   - docker-compose up -d
-  - ./scripts/test
+  - docker-compose run authtables scripts/test
 
 notifications:
   email: false
