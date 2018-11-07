@@ -5,7 +5,6 @@ go:
 
 services:
   - docker
-  - redis
 
 script:
   - docker-compose build

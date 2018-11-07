@@ -244,7 +244,6 @@ func loadRecords() {
 		var err error
 		//The shard name is pulled from config. We don't want to waste time on records that won't be asked of us.
 		keys, cursor, err = client.Scan(cursor, c.Shard+"*", 10).Result()
-		fmt.Println("cursor =", cursor)
 		if err != nil {
 			log.Error("Could not connect to database. Continuing without records")
 			break
