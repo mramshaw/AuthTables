@@ -28,10 +28,6 @@ func TestRedisConnectivity(t *testing.T) {
 	}
 }
 
-func TestPrintLine(t *testing.T) {
-	fmt.Println("Print line works, so there's that.")
-}
-
 func TestLoad(t *testing.T) {
 	writeRecord([]byte("asdf"))
 }

@@ -44,6 +44,7 @@ func getRecordHashesFromRecord(rec Record) (recordhashes RecordHashes) {
 }
 
 func check(rec Record) (b bool) {
+
 	//We've received a request to /check and now
 	//we need to see if it's suspicious or not.
 
@@ -218,7 +219,6 @@ func writeRecord(key []byte) {
 		}).Error("Problem connecting to database.")
 
 	}
-
 }
 
 func rebuildConnection() {
@@ -231,6 +231,7 @@ func rebuildConnection() {
 }
 
 func loadRecords() {
+
 	timeTrack(time.Now(), "Loading records")
 
 	var cursor uint64
@@ -243,6 +244,7 @@ func loadRecords() {
 		var err error
 		//The shard name is pulled from config. We don't want to waste time on records that won't be asked of us.
 		keys, cursor, err = client.Scan(cursor, c.Shard+"*", 10).Result()
+		fmt.Println("cursor =", cursor)
 		if err != nil {
 			log.Error("Could not connect to database. Continuing without records")
 			break
@@ -257,9 +259,7 @@ func loadRecords() {
 			break
 		}
 	}
-	log.WithFields(log.Fields{
-		"number": n,
-	}).Debug("Loaded historical records.")
+	log.WithFields(log.Fields{"number": n}).Debug("Loaded historical records.")
 }
 
 func canGetKey(s string) bool {
