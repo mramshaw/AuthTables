@@ -1,4 +1,4 @@
-FROM golang:1.7
+FROM golang:1.11
 
 # Create a workspace
 RUN mkdir -p /opt/authtables

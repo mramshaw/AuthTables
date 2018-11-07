@@ -33,11 +33,11 @@ func getRecordHashesFromRecord(rec Record) (recordhashes RecordHashes) {
 
 	rh := RecordHashes{
 		uid:    []byte(c.Shard + rec.Uid),
-		uidMID: []byte(fmt.Sprintf(c.Shard + "%s:%s", rec.Uid, rec.Mid)),
-		uidIP:  []byte(fmt.Sprintf(c.Shard + "%s:%s", rec.Uid, rec.Ip)),
-		uidALL: []byte(fmt.Sprintf(c.Shard + "%s:%s:%s", rec.Uid, rec.Ip, rec.Mid)),
-		ipMID:  []byte(fmt.Sprintf(c.Shard + "%s:%s", rec.Ip, rec.Mid)),
-		midIP:  []byte(fmt.Sprintf(c.Shard + "%s:%s", rec.Mid, rec.Ip)),
+		uidMID: []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Uid, rec.Mid)),
+		uidIP:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Uid, rec.Ip)),
+		uidALL: []byte(fmt.Sprintf(c.Shard+"%s:%s:%s", rec.Uid, rec.Ip, rec.Mid)),
+		ipMID:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Ip, rec.Mid)),
+		midIP:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Mid, rec.Ip)),
 	}
 
 	return rh
@@ -244,7 +244,7 @@ func loadRecords() {
 		var keys []string
 		var err error
 		//The shard name is pulled from config. We don't want to waste time on records that won't be asked of us.
-		keys, cursor, err = client.Scan(cursor, c.Shard + "*", 10).Result()
+		keys, cursor, err = client.Scan(cursor, c.Shard+"*", 10).Result()
 		if err != nil {
 			log.Error("Could not connect to database. Continuing without records")
 			break

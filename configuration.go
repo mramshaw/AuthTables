@@ -2,19 +2,19 @@ package main
 
 import (
 	"flag"
-	"os"
- 	"strconv"
 	log "github.com/Sirupsen/logrus"
+	"os"
+	"strconv"
 )
 
 //Configuration holds data cleaned from our ENV variables or passed through cmd line
 type Configuration struct {
-	Host     	string
-	Port     	string
-	Password 	string
-	Loglevel 	string
+	Host      string
+	Port      string
+	Password  string
+	Loglevel  string
 	BloomSize uint
-	Shard 	 	string
+	Shard     string
 }
 
 //Global access to configuration variables
@@ -31,17 +31,16 @@ func readConfig() (c Configuration) {
 	var flagLoglevel string
 	flag.StringVar(&flagLoglevel, "loglevel", os.Getenv("AUTHTABLES_LOGLEVEL"), "level of logging (debug, info, warn, error)")
 	var flagBloomSize uint
-	d, _  := strconv.ParseUint(os.Getenv("AUTHTABLES_BLOOMSIZE"), 0, 32)
+	d, _ := strconv.ParseUint(os.Getenv("AUTHTABLES_BLOOMSIZE"), 0, 32)
 	flag.UintVar(&flagBloomSize, "bloomsize", uint(d), "size of bloom filter (default 1e9)")
 	var flagShard string
 	flag.StringVar(&flagShard, "shard", os.Getenv("AUTHTABLES_SHARD"), "name of this shard (prefix's keys within redis)")
 
 	flag.Parse()
 
-	if (flagHost == "" || flagPort == "" || flagLoglevel == "" || flagBloomSize == 0) {
+	if flagHost == "" || flagPort == "" || flagLoglevel == "" || flagBloomSize == 0 {
 		log.Error("Important things are not configured. You need to have your environment variables set, a .env file (docker), or pass valid data in command line arguments.")
 	}
-
 
 	//We're going to load this with config data. See struct!
 	configuration := Configuration{}

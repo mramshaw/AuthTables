@@ -1,16 +1,16 @@
 package main
 
 import (
-				"testing"
- 				"fmt"
- 				"net/http"
- 				"net/http/httptest"
- 				"log"
- 				"io/ioutil"
- 				"github.com/willf/bloom"
- 				"bytes"
- 				"encoding/json"
-			)
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"github.com/willf/bloom"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+)
 
 var testRec = Record{
 	Uid: "testUID",
@@ -20,7 +20,7 @@ var testRec = Record{
 
 var filterTest = bloom.NewWithEstimates(c.BloomSize, 1e-3) // Configurable in environment var.
 
-func TestRedisConnectivity (t *testing.T) {
+func TestRedisConnectivity(t *testing.T) {
 
 	_, err := client.Ping().Result()
 	if err != nil {

@@ -1,15 +1,15 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	log "github.com/Sirupsen/logrus"
 	"github.com/willf/bloom"
 	"gopkg.in/redis.v4"
-	"encoding/json"
-	log "github.com/Sirupsen/logrus"
-	"fmt"
 )
 
 //Bloom Filter
-var filter = bloom.NewWithEstimates(c.BloomSize, 1e-3) // Configurable in environment var. 
+var filter = bloom.NewWithEstimates(c.BloomSize, 1e-3) // Configurable in environment var.
 
 //Record is the main struct that is passed from applications to AuthTables as JSON.
 //Applications send us these, and AuthTables responds with `OK`s or `BAD`
