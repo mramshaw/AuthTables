@@ -11,9 +11,10 @@ RUN go get github.com/willf/bloom \
 
 # Add our files
 ADD authtables.go authtables.go
-ADD .env .env
+ADD build_test.go build_test.go
 ADD configuration.go configuration.go
 ADD datastore.go datastore.go
+ADD .env .env
 
 # Build app
 RUN go build authtables.go configuration.go datastore.go
