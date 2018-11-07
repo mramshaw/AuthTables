@@ -72,6 +72,7 @@ func check(rec Record) (b bool) {
 		//Write Everything.
 		//defer writeUserRecord(rh)
 		return true
+
 	} else if (filter.Test(rh.uidMID)) || (filter.Test(rh.uidIP)) {
 
 		log.WithFields(log.Fields{
@@ -92,17 +93,14 @@ func check(rec Record) (b bool) {
 
 		defer writeUserRecord(rh)
 		return true
-
-	} else {
-
-		log.WithFields(log.Fields{
-			"uid": rec.Uid,
-			"mid": rec.Mid,
-			"ip":  rec.Ip,
-		}).Info("Suspicious authentication.")
-		return false
 	}
 
+	log.WithFields(log.Fields{
+		"uid": rec.Uid,
+		"mid": rec.Mid,
+		"ip":  rec.Ip,
+	}).Info("Suspicious authentication.")
+	return false
 }
 
 func isStringSane(s string) (b bool) {
