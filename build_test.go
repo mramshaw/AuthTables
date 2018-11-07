@@ -4,24 +4,24 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/willf/bloom"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/willf/bloom"
 )
 
 var testRec = Record{
-	Uid: "testUID",
+	UID: "testUID",
 	Mid: "testMID",
-	Ip:  "1.1.1.1",
+	IP:  "1.1.1.1",
 }
 
-var filterTest = bloom.NewWithEstimates(c.BloomSize, 1e-3) // Configurable in environment var.
+var filterTest = bloom.NewWithEstimates(c.BloomSize, 1e-3) // Configurable via environment var.
 
 func TestRedisConnectivity(t *testing.T) {
-
 	_, err := client.Ping().Result()
 	if err != nil {
 		t.Errorf("We can't ping redis.")
@@ -29,7 +29,6 @@ func TestRedisConnectivity(t *testing.T) {
 }
 
 func TestPrintLine(t *testing.T) {
-	// test stuff here...
 	fmt.Println("Print line works, so there's that.")
 }
 
@@ -38,6 +37,7 @@ func TestLoad(t *testing.T) {
 }
 
 func TestWWWServer(t *testing.T) {
+
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Testing the client")
 	}))
@@ -69,10 +69,10 @@ func TestBloom(t *testing.T) {
 	if !filterTest.Test([]byte("exists")) {
 		log.Fatal("Bloom filter could not detect a string that was in filter")
 	}
-
 }
 
 func TestCheckRequest(t *testing.T) {
+
 	req, err := http.NewRequest("POST", "/check", bytes.NewBuffer(testRec.Marshaler()))
 	if err != nil {
 		t.Fatal(err)
@@ -97,6 +97,7 @@ func TestCheckRequest(t *testing.T) {
 }
 
 func TestResetRequest(t *testing.T) {
+
 	req, err := http.NewRequest("POST", "/reset", bytes.NewBuffer(testRec.Marshaler()))
 	if err != nil {
 		t.Fatal(err)
@@ -152,7 +153,6 @@ func TestAddRequest(t *testing.T) {
 	if !(canGetKey("testUID:1.1.1.1") && canGetKey("testUID:testMID")) {
 		t.Errorf("keys not being written")
 	}
-
 }
 
 func BenchmarkBloomAdd(b *testing.B) {

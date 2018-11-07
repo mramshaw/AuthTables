@@ -32,12 +32,12 @@ func main() {
 func getRecordHashesFromRecord(rec Record) (recordhashes RecordHashes) {
 
 	rh := RecordHashes{
-		uid:    []byte(c.Shard + rec.Uid),
-		uidMID: []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Uid, rec.Mid)),
-		uidIP:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Uid, rec.Ip)),
-		uidALL: []byte(fmt.Sprintf(c.Shard+"%s:%s:%s", rec.Uid, rec.Ip, rec.Mid)),
-		ipMID:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Ip, rec.Mid)),
-		midIP:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Mid, rec.Ip)),
+		uid:    []byte(c.Shard + rec.UID),
+		uidMID: []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.UID, rec.Mid)),
+		uidIP:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.UID, rec.IP)),
+		uidALL: []byte(fmt.Sprintf(c.Shard+"%s:%s:%s", rec.UID, rec.IP, rec.Mid)),
+		ipMID:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.IP, rec.Mid)),
+		midIP:  []byte(fmt.Sprintf(c.Shard+"%s:%s", rec.Mid, rec.IP)),
 	}
 
 	return rh
@@ -64,9 +64,9 @@ func check(rec Record) (b bool) {
 	if filter.Test(rh.uidALL) {
 		//We've seen everything about this user before. MachineID, IP, and user.
 		log.WithFields(log.Fields{
-			"uid": rec.Uid,
+			"uid": rec.UID,
 			"mid": rec.Mid,
-			"ip":  rec.Ip,
+			"ip":  rec.IP,
 		}).Debug("Known user information.")
 
 		//Write Everything.
@@ -76,9 +76,9 @@ func check(rec Record) (b bool) {
 	} else if (filter.Test(rh.uidMID)) || (filter.Test(rh.uidIP)) {
 
 		log.WithFields(log.Fields{
-			"uid": rec.Uid,
+			"uid": rec.UID,
 			"mid": rec.Mid,
-			"ip":  rec.Ip,
+			"ip":  rec.IP,
 		}).Debug("Authentication is partially within graph. Expanding graph.")
 		defer writeUserRecord(rh)
 		return true
@@ -86,9 +86,9 @@ func check(rec Record) (b bool) {
 	} else if !(filter.Test(rh.uid)) {
 
 		log.WithFields(log.Fields{
-			"uid": rec.Uid,
+			"uid": rec.UID,
 			"mid": rec.Mid,
-			"ip":  rec.Ip,
+			"ip":  rec.IP,
 		}).Debug("New user. Creating graph")
 
 		defer writeUserRecord(rh)
@@ -96,9 +96,9 @@ func check(rec Record) (b bool) {
 	}
 
 	log.WithFields(log.Fields{
-		"uid": rec.Uid,
+		"uid": rec.UID,
 		"mid": rec.Mid,
-		"ip":  rec.Ip,
+		"ip":  rec.IP,
 	}).Info("Suspicious authentication.")
 	return false
 }
@@ -115,7 +115,7 @@ func isStringSane(s string) (b bool) {
 
 func isRecordSane(r Record) (b bool) {
 
-	return (isStringSane(r.Mid) && isStringSane(r.Ip) && isStringSane(r.Uid))
+	return (isStringSane(r.Mid) && isStringSane(r.IP) && isStringSane(r.UID))
 
 }
 func sanitizeError() {
@@ -156,9 +156,9 @@ func addRequest(w http.ResponseWriter, r *http.Request) {
 
 	if isRecordSane(m) {
 		log.WithFields(log.Fields{
-			"uid": m.Uid,
+			"uid": m.UID,
 			"mid": m.Mid,
-			"ip":  m.Ip,
+			"ip":  m.IP,
 		}).Debug("Adding user.")
 
 		if add(m) {
