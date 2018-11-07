@@ -1,21 +1,36 @@
 # AuthTables
-(no longer maintained!)
-[![Build Status](https://travis-ci.org/magoo/AuthTables.svg?branch=master)](https://travis-ci.com/magoo/AuthTables) [![Go Report Card](https://goreportcard.com/badge/github.com/magoo/AuthTables)](https://goreportcard.com/report/github.com/magoo/AuthTables)
+
+(No longer maintained by magoo!)
+
+[![Build Status](http://travis-ci.org/mramshaw/AuthTables.svg?branch=master)](http://travis-ci.com/mramshaw/AuthTables)
+[![Coverage Status](http://codecov.io/github/mramshaw/AuthTables/coverage.svg?branch=master)](http://codecov.io/github/mramshaw/AuthTables?branch=master)
+[![Go Report Card](http://goreportcard.com/badge/github.com/mramshaw/AuthTables?style=flat-square)](http://goreportcard.com/report/github.com/mramshaw/AuthTables)
+[![GoDoc](http://godoc.org/github.com/mramshaw/AuthTables?status.svg)](http://godoc.org/github.com/mramshaw/AuthTables)
+[![GitHub release](http://img.shields.io/github/release/mramshaw/AuthTables.svg?style=flat-square)](http://github.com/mramshaw/AuthTables/releases)
 
 AuthTables is a service that detects the possibility of "Account Take Over" (ATO) caused by remote credential theft and reuse. If bad actors are stealing your users passwords, AuthTables may be useful.
 
-After a successful authentication attempt, AuthTables can very simply respond to your app with `BAD` if it hasn't seen the user on the IP or device identifier before. You can then challenge the user with MFA, an email confirmation, or other verification. If it has seen the user, it will respond with `OK` and you have greater assurance that the user hasn't been compromised by a basic ATO (See "Threat")
+After a successful authentication attempt, AuthTables can very simply respond to your app with `BAD` if it hasn't seen the user on the IP or device identifier before.
+You can then challenge the user with MFA, an email confirmation, or other verification. If it has seen the user, it will respond with `OK` and you have some assurance
+that the user hasn't been compromised by a basic ATO (See "Threat")
 
-![](authgraph.png)
+![Authorization Graph](images/authgraph.png)
 
-AuthTables depends on no external feeds of data, risk scores, or machine learning. Your own authentication data will generate a graph of known location records for a user as they authenticate with known cookies or IP addresses. Every new login from a previously known IP or Cookie makes this graph stronger over time as it adds new record for the user, reducing their friction and increasing their security.
+AuthTables depends on no external feeds of data, risk scores, or machine learning. Your own authentication data will generate a graph of known location records
+for a user as they authenticate with known cookies or IP addresses. Every new login from a previously known IP or Cookie makes this graph stronger over time
+as it adds new records for the user, reducing their friction and increasing their security.
 
-Read more about this strategy [here](https://medium.com/starting-up-security/preventing-account-takeover-c914fa07fb45#.pm66h84hi).
+Read more about this strategy:
 
-AuthTables relies on an in memory [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter) allowing extremely fast responses while storing historical user location records to redis for backups and fraud investigations.
+    http://medium.com/starting-up-security/preventing-account-takeover-c914fa07fb45#.pm66h84hi
+
+AuthTables relies on an in-memory [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter) allowing extremely fast responses while storing historical user location records to redis for backups and fraud investigations.
 
 ## Potential Implementations
-AuthTables only tells you if a login is completely unrecognized or not. It's up to you to build your application to do the following with `BAD` logins:
+
+AuthTables only tells you if a login is completely unrecognized or not.
+
+It's up to you to build your application to do the following with `BAD` logins:
 
 - Hook up a Slack bot to notify employees that a totally new IP / Device logged into their account.
 - Force an IP that is frequently authenticating as `BAD` to solve CAPTCHA's.
@@ -23,11 +38,12 @@ AuthTables only tells you if a login is completely unrecognized or not. It's up 
 - Do a `count(IP)` across all of your suspicious logins and surface high volume bad actors for review.
 - Notify other open sessions if the new `BAD` session is ok.
 
-While AuthTables will "Trust on First Use" (TOFU), it's up to your applications to `/add` new authentication data to create a positive feedback loop. For instance, every MFA challenge that succeeds should `/add` the auth to AuthTables to improve signal. 
+While AuthTables will "Trust on First Use" (TOFU), it's up to your applications to `/add` new authentication data to create a positive feedback loop.
+For instance, every MFA challenge that succeeds should `/add` the auth to AuthTables to improve signal. 
 
 Here's how AuthTables looks when it is logging authentications. 
 
-![](example.gif)
+![AuthTables example](images/example.gif)
 
 ## The Threat
 
@@ -35,7 +51,7 @@ AuthTables is solely focused on the most common credential theft and reuse vecto
 
 Remote credential reuse is the most common and most accessible threat that results from large credential dumps and shared passwords.
 
-![](visual.png)
+![Threats](images/visual.png)
 
 Far more than half of the abuse issues related to ATO are remote credential reuse due to its ease of exploitation. The constellation of other problems (local malware, malicious browser extensions, MITM) usually make up the rest at most companies, and are not in scope of AuthTables.
 
@@ -44,9 +60,11 @@ AuthTables focuses solely on this largest problem, and logically reduces the pos
 If fraud *does occur* after your systems have challenged a `BAD` user, you can logically conclude that the user has suffered a much more significant compromise than a remote credential theft.
 
 ## Opportunity
-The attack limitations of simple credential thief creates an opportunity for us to build an ever growing graph of known records a user authenticates from. A credential thief is limited to operating outside of this graph, thus allowing us to treat those authentication with suspicion.
 
-![image](graph.png)
+The attack limitations of simple credential theft creates an opportunity for us to build an ever-growing graph of known records a user authenticates from.
+A credential thief is limited to operating outside of this graph, thus allowing us to treat those authentication attempts with suspicion.
+
+![Network graph](images/graph.png)
 
 Your application may have methods to verify these suspicious records and `/add` them the user's graph:
 
@@ -66,6 +84,7 @@ AuthTables assumes that your authentication service assigns as-static-as-possibl
 This allows less friction to the user and greatly reduces the need to prompt for MFA or other out-of-band-verifications. It also strongly identifies when a user is compromised by a more powerful, localized attack, or ATO of their registration email, allowing for much easier support scenarios to mitigate the user once you've eliminated remote credential reuse as a possibility.
 
 ## Detection
+
 It's entirely possible to limit AuthTables to only logging duty with no interference or interaction with your users. Implement custom alerting on your logs and can discover IP addresses or machine identifiers that are frequently appearing as suspicious logins which may surface high scale ATO driven attacks on your application.
 
 ## Protocol
@@ -88,6 +107,7 @@ AuthTables quickly responds whether this is a known record for the user. If eith
 - In-Person account takeover, like "Friendly Fraud" or the "Malicious Family Member" bypasses AuthTables. Localized, personal attacks may share a laptop or wifi, both of which would bypass protections from AuthTables.
 
 ## Running With Docker
+
 Install docker / compose: https://docs.docker.com/compose/install/
 
 ```bash
@@ -110,4 +130,6 @@ curl localhost:8080/check \
 
 See more examples in `/scripts` for local testing.
 
+## To Do
 
+- [x] Add various badges
