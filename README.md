@@ -2,7 +2,7 @@
 
 (No longer maintained by magoo!)
 
-[![Build Status](http://travis-ci.org/mramshaw/AuthTables.svg?branch=master)](http://travis-ci.com/mramshaw/AuthTables)
+[![Build Status](http://travis-ci.org/mramshaw/AuthTables.svg?branch=master)](http://travis-ci.org/mramshaw/AuthTables)
 [![Coverage Status](http://codecov.io/github/mramshaw/AuthTables/coverage.svg?branch=master)](http://codecov.io/github/mramshaw/AuthTables?branch=master)
 [![Go Report Card](http://goreportcard.com/badge/github.com/mramshaw/AuthTables?style=flat-square)](http://goreportcard.com/report/github.com/mramshaw/AuthTables)
 [![GoDoc](http://godoc.org/github.com/mramshaw/AuthTables?status.svg)](http://godoc.org/github.com/mramshaw/AuthTables)
