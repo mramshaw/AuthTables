@@ -144,7 +144,7 @@ func requestToJSON(r *http.Request) (m Record) {
 	var rec Record
 	err = json.Unmarshal(clientAuthdata, &rec)
 	if err != nil {
-		log.Warn("Trouble with Unmarhal of JSON received from client.")
+		log.Warn("Trouble with Unmarshal of JSON received from client.")
 	}
 
 	return rec
