@@ -9,7 +9,7 @@ services:
        - "8080:8080"
       volumes:
        - .:/opt/authtables
-      links:
+      depends_on:
        - redis
       env_file: .env
 
