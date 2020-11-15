@@ -3,8 +3,9 @@ services:
 
 script:
   - docker-compose up -d
-  - docker-compose exec authtables go test -race -coverprofile=coverage.txt -covermode=atomic -v
+  - docker ps
   - docker-compose run authtables scripts/test
+  - docker-compose exec authtables go test -race -coverprofile=coverage.txt -covermode=atomic -v
   - docker-compose down
 
 notifications:
