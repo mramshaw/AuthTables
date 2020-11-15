@@ -15,4 +15,4 @@ services:
     redis:
       image: redis:latest
       sysctls:
-       net.core.somaxconn: 1024
+       net.core.somaxconn: 511
