@@ -73,7 +73,7 @@ check "4.4.4.4" "BADCOOKIE" "OK"
 echo Try resetting the database
 rst "RESET"
 
-echo Database reset and our data is here, persistance successful.
+echo Database reset and our data is here, persistence successful.
 check "4.4.4.4" "BADCOOKIE" "OK"
 
 echo "All tests have passed."
