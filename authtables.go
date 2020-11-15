@@ -239,7 +239,9 @@ func loadRecords() {
 
 	//Empty our filter before re-filling
 	filter.ClearAll()
+	log.Debug("Filter is cleared...")
 	for {
+		log.Debug("Iterating through shard...")
 		var keys []string
 		var err error
 		//The shard name is pulled from config. We don't want to waste time on records that won't be asked of us.
@@ -249,8 +251,10 @@ func loadRecords() {
 			break
 		}
 		n += len(keys)
+		log.WithFields(log.Fields{"number": n}).Debug("Loading historical records...")
 
 		for _, element := range keys {
+			log.WithFields(log.Fields{"element": element}).Debug("Adding record...")
 			filter.Add([]byte(element))
 		}
 

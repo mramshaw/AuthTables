@@ -7,10 +7,10 @@ script:
   - docker-compose logs authtables
   # Run the next part in the EXISTING authtables container
   - docker-compose exec authtables go test -race -coverprofile=coverage.txt -covermode=atomic -v
-  # Run the next part in a NEW authtables container
-  - docker-compose run authtables scripts/test
   - docker-compose logs redis
   - docker-compose logs authtables
+  # Run the next part in a NEW authtables container
+  - docker-compose run authtables scripts/test
   # Now shut everything down
   - docker-compose down
 
