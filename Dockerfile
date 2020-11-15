@@ -1,7 +1,7 @@
 FROM golang:1.11
 
 # Create a workspace
-RUN mkdir -p /opt/authtables
+RUN mkdir -p /opt/authtables/scripts
 WORKDIR /opt/authtables
 
 # install deps
@@ -10,14 +10,11 @@ RUN go get github.com/willf/bloom \
            github.com/Sirupsen/logrus
 
 # Add our files
-ADD authtables.go authtables.go
-ADD build_test.go build_test.go
-ADD configuration.go configuration.go
-ADD datastore.go datastore.go
-ADD .env .env
+COPY .env *.go ./
+COPY scripts/test ./scripts/
 
 # Build app
-RUN go build authtables.go configuration.go datastore.go
+RUN go build -o authtables authtables.go configuration.go datastore.go
 
 # Default runs on 8080
 EXPOSE 8080
