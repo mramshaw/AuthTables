@@ -2,10 +2,13 @@ services:
   - docker
 
 script:
+  - docker-compose build
   - docker-compose up -d
+  - docker-compose logs redis
+  - docker-compose logs authtables
   - docker ps
-  - docker-compose run authtables scripts/test
   - docker-compose exec authtables go test -race -coverprofile=coverage.txt -covermode=atomic -v
+  - docker-compose run authtables scripts/test
   - docker-compose down
 
 notifications:
