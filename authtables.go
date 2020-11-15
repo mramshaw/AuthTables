@@ -254,11 +254,12 @@ func loadRecords() {
 		log.WithFields(log.Fields{"number": n}).Debug("Loading historical records...")
 
 		for _, element := range keys {
-			log.WithFields(log.Fields{"element": element}).Debug("Adding record...")
+			log.WithFields(log.Fields{"element": element}).Debug("Adding historical record...")
 			filter.Add([]byte(element))
 		}
 
 		if cursor == 0 {
+			log.Debug("Iterating through shard, cursor was zero...")
 			break
 		}
 	}
