@@ -1,6 +1,7 @@
 FROM golang:1.11
 
 # Create a workspace
+RUN mkdir -p /opt/authtables/coverage
 RUN mkdir -p /opt/authtables/scripts
 WORKDIR /opt/authtables
 

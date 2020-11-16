@@ -6,7 +6,7 @@ script:
   - docker-compose logs redis
   - docker-compose logs authtables
   # Run the next part in the EXISTING authtables container
-  - docker-compose exec authtables go test -race -coverprofile=coverage.txt -covermode=atomic -v
+  - docker-compose exec authtables go test -race -coverprofile=coverage/coverage.txt -covermode=atomic -v
   - docker-compose logs redis
   - docker-compose logs authtables
   # Run the next part in a NEW authtables container
@@ -18,4 +18,4 @@ notifications:
   email: false
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -f coverage/coverage.txt
