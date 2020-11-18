@@ -17,8 +17,6 @@ func main() {
 	//First time online, load historical data for bloom
 	loadRecords()
 
-	//Configure log Loglevel
-
 	//Announce that we're running
 	log.Info("AuthTables is running.")
 	//Add routes, then open a webserver
@@ -299,7 +297,7 @@ func timeTrack(start time.Time, name string) {
 
 //Only using init to configure logging. See configuration.go
 func init() {
-	level, err := log.ParseLevel(c.Loglevel)
+	level, err := log.ParseLevel(c.LogLevel)
 	if err != nil {
 		log.Error("Issue setting log level. Make sure log level is a string: debug, warn, info, error, panic")
 	}

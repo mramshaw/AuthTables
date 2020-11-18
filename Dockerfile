@@ -1,4 +1,4 @@
-FROM golang:1.11
+FROM golang:1.15.4
 
 # Create a workspace
 RUN mkdir -p /opt/authtables/coverage

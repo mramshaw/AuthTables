@@ -1,56 +1,64 @@
 package main
 
 import (
-	"flag"
-	log "github.com/Sirupsen/logrus"
 	"os"
 	"strconv"
 )
 
-//Configuration holds data cleaned from our ENV variables or passed through cmd line
+const (
+	defaultHost      = "redis"
+	defaultPort      = "6379"
+	defaultPassword  = ""
+	defaultLogLevel  = "debug"
+	defaultBloomSize = 1000000
+	defaultShard     = ""
+)
+
+//Configuration holds data from ENV variables, or defaults
 type Configuration struct {
 	Host      string
 	Port      string
 	Password  string
-	Loglevel  string
+	LogLevel  string
 	BloomSize uint
 	Shard     string
 }
 
 //Global access to configuration variables
-var c = readConfig()
+var c = getConfig()
 
-func readConfig() (c Configuration) {
-	//Command Line Flags. If command line flag is blank, use ENV instead
-	var flagHost string
-	flag.StringVar(&flagHost, "host", os.Getenv("AUTHTABLES_HOST"), "hostname for redis")
-	var flagPort string
-	flag.StringVar(&flagPort, "port", os.Getenv("AUTHTABLES_PORT"), "port for redis")
-	var flagPW string
-	flag.StringVar(&flagPW, "password", os.Getenv("AUTHTABLES_PW"), "password for redis")
-	var flagLoglevel string
-	flag.StringVar(&flagLoglevel, "loglevel", os.Getenv("AUTHTABLES_LOGLEVEL"), "level of logging (debug, info, warn, error)")
-	var flagBloomSize uint
-	d, _ := strconv.ParseUint(os.Getenv("AUTHTABLES_BLOOMSIZE"), 0, 32)
-	flag.UintVar(&flagBloomSize, "bloomsize", uint(d), "size of bloom filter (default 1e9)")
-	var flagShard string
-	flag.StringVar(&flagShard, "shard", os.Getenv("AUTHTABLES_SHARD"), "name of this shard (prefix's keys within redis)")
+func getConfig() (c Configuration) {
 
-	flag.Parse()
-
-	if flagHost == "" || flagPort == "" || flagLoglevel == "" || flagBloomSize == 0 {
-		log.Error("Important things are not configured. You need to have your environment variables set, a .env file (docker), or pass valid data in command line arguments.")
-	}
-
-	//We're going to load this with config data. See struct!
 	configuration := Configuration{}
 
-	configuration.Host = flagHost
-	configuration.Port = flagPort
-	configuration.Password = flagPW
-	configuration.Loglevel = flagLoglevel
-	configuration.BloomSize = flagBloomSize
-	configuration.Shard = flagShard
+	// set to defaults
+	configuration.Host = defaultHost
+	configuration.Port = defaultPort
+	configuration.Password = defaultPassword
+	configuration.LogLevel = defaultLogLevel
+	configuration.BloomSize = defaultBloomSize
+	configuration.Shard = defaultShard
+
+	// override with ENV values, if set
+	if envVal, envSet := os.LookupEnv("AUTHTABLES_HOST"); envSet {
+		configuration.Host = envVal
+	}
+	if envVal, envSet := os.LookupEnv("AUTHTABLES_PORT"); envSet {
+		configuration.Port = envVal
+	}
+	if envVal, envSet := os.LookupEnv("AUTHTABLES_PW"); envSet {
+		configuration.Password = envVal
+	}
+	if envVal, envSet := os.LookupEnv("AUTHTABLES_LOGLEVEL"); envSet {
+		configuration.LogLevel = envVal
+	}
+	if envVal, envSet := os.LookupEnv("AUTHTABLES_BLOOMSIZE"); envSet {
+		bs, _ := strconv.ParseUint(envVal, 0, 32)
+		configuration.BloomSize = uint(bs)
+	}
+	if envVal, envSet := os.LookupEnv("AUTHTABLES_SHARD"); envSet {
+		configuration.Shard = envVal
+	}
 
 	return configuration
 }

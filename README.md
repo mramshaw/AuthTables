@@ -133,3 +133,4 @@ See more examples in `/scripts` for local testing.
 ## To Do
 
 - [x] Add various badges
+- [x] Update to latest version of Go (__1.15.4__)
