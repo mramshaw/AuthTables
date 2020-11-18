@@ -201,7 +201,7 @@ func checkRequest(w http.ResponseWriter, r *http.Request) {
 		//We hit this if nasty JSON data came through. Shouldn't touch bloom or redis.
 		//To remove this message, don't let your application send UID, IP, or MID that doesn't match "^[A-Za-z0-9.]{0,60}$"
 		sanitizeError()
-		fmt.Fprintln(w, "BAD")
+		fmt.Fprint(w, "BAD")
 	}
 }
 

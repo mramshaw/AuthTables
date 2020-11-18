@@ -13,6 +13,12 @@ import (
 	"github.com/willf/bloom"
 )
 
+var badRec = Record{
+	UID: "test*UID",
+	Mid: "test*MID",
+	IP:  "1.1.*.1",
+}
+
 var testRec = Record{
 	UID: "testUID",
 	Mid: "testMID",
@@ -64,6 +70,31 @@ func TestBloom(t *testing.T) {
 	filterTest.Add([]byte("exists"))
 	if !filterTest.Test([]byte("exists")) {
 		log.Fatal("Bloom filter could not detect a string that was in filter")
+	}
+}
+
+func TestBadRequest(t *testing.T) {
+
+	req, err := http.NewRequest("POST", "/check", bytes.NewBuffer(badRec.Marshaler()))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(checkRequest)
+
+	handler.ServeHTTP(rr, req)
+
+	// Correct Response?
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+	// Check the response body is what we expect.
+	expected := `BAD`
+	if rr.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v",
+			rr.Body.String(), expected)
 	}
 }
 
